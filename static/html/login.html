@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Login</title>
+
+    </head>
+    <body>
+        <div style="background-color: aquamarine; text-align: center;">
+            <h3>Login Page</h3>
+            <div>Please enter your user name and password. Both are case sensitive</div>
+        </div>
+        <div style="text-align: center; padding-top: 10px;">
+            <form id="myform" onsubmit="return false;">
+                User:
+                <input type="text" id="username">
+                Password:
+                <input type="text" id="password">
+                <div>
+                <button type="submit" value="Submit" style="width: 450px; background-color: blue;">Login</button>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script>
+            
+        document.getElementById("myform").addEventListener("submit", function(e){
+            e.preventDefault();
+
+            name = document.getElementById("username").value 
+            password = document.getElementById("password").value
+
+            fetch('http://localhost:9007/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({name: name, password: password}),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    var dataFromServer = JSON.stringify(data);
+                    console.log('this ' + dataFromServer.status);
+                    
+                    if (data['status'] == 'fail'){
+                        alert("Login error");
+                        document.getElementById('username').value = "";
+                        document.getElementById('password').value = "";
+                    } else {
+                        window.location.href = "/schedule"
+                    }
+                })
+                .then(error => console.error('Error'. error));
+            
+        });
+        
+    </script>
+</html>
